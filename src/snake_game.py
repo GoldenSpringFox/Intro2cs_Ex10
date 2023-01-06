@@ -14,6 +14,14 @@ class SnakeGame:
         self.__score = 0
         self.rounds = rounds
 
+    def is_cell_empty(self, x: int, y: int):
+        return (x,y) not in (
+            self.__snake.get_snake_coordinates() + 
+            self.__apple_handler.get_apples_coordinates() +
+            self.__wall_handler.get_walls_coordinates())
+    
+    def are_cells_empty(self, cells: List[Tuple[int, int]]):
+        return all(self.is_cell_empty(*cell) for cell in cells)
 
     def read_key(self, key_clicked: Optional[str])-> None:
         self.__key_clicked = key_clicked
