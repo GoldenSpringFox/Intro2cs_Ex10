@@ -34,7 +34,7 @@ class Snake:
             new_cord = (self.__snake_cords[0][0] - 1, self.__snake_cords[0][1])
             self.__snake_cords.insert(0, new_cord)
         elif key_clicked == 'Right':
-            new_cord = (self.__snake_cords[0][0] + 1, self.__snake_cords[0][1] + 1)
+            new_cord = (self.__snake_cords[0][0] + 1, self.__snake_cords[0][1])
             self.__snake_cords.insert(0, new_cord)
         self.__snake_cords.pop()
         self.__direction = key_clicked
