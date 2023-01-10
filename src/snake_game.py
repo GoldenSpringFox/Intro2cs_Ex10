@@ -25,7 +25,7 @@ class SnakeGame:
     def _is_cell_empty(self, x: int, y: int):
         return (x, y) not in (
                 self.__snake.body_coordinates +
-                self.__apple_handler.get_apples_coordinates() +
+                self.__apple_handler.apples_coordinates +
                 self.__wall_handler.get_walls_coordinates())
 
     def _are_cells_empty(self, cells: List[Tuple[int, int]]):
@@ -42,7 +42,7 @@ class SnakeGame:
         if self._snake_collided_with_wall() or self.__snake.is_head_on_body():
             self.__snake.remove_snake_head()
             self.__is_snake_dead = True
-        elif self.__snake.head_coordinate in self.__apple_handler.get_apples_coordinates():
+        elif self.__snake.head_coordinate in self.__apple_handler.apples_coordinates:
             self.__apple_handler.remove_apple(self.__snake.head_coordinate)
             self.__score += int(self.__snake.body_length ** 0.5)
             self.__snake.grow(3)
@@ -65,7 +65,7 @@ class SnakeGame:
         if not self.__debug:
             for cord in self.__snake.body_coordinates:
                 gd.draw_cell(*cord, 'black')
-        for apple in self.__apple_handler.get_apples_coordinates():
+        for apple in self.__apple_handler.apples_coordinates:
             gd.draw_cell(*apple, 'green')
         for wall in self.__wall_handler.get_walls_coordinates():
             gd.draw_cell(*wall, 'blue')
@@ -74,7 +74,7 @@ class SnakeGame:
         self.__rounds -= 1
 
     def is_over(self) -> bool:
-        return self.__rounds == 0 or self.__is_snake_dead
+        return self.__rounds <= 0 or self.__is_snake_dead
 
     @property
     def score(self):
