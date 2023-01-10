@@ -43,6 +43,7 @@ class SnakeGame:
             self.__snake.remove_snake_head()
             self.__is_snake_dead = True
         elif self.__snake.head_coordinate in self.__apple_handler.get_apples_coordinates():
+            self.__apple_handler.remove_apple(self.__snake.head_coordinate)
             self.__score += int(self.__snake.body_length ** 0.5)
             self.__snake.grow(3)
 
