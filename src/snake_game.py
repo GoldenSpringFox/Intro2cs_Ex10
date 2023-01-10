@@ -9,27 +9,40 @@ from game_utils import size
 class SnakeGame:
 
     def __init__(self, rounds: int) -> None:
-        self.__snake = Snake((size[0]//2, size[1]//2))
+        self.__board_width = size[0]
+        self.__board_height = size[1]
+        self.__snake = Snake((self.__board_width//2, self.__board_height//2))
         self.__apple_handler = AppleHandler()
         self.__wall_handler = WallHandler()
         self.__key_clicked = None
         self.__score = 0
-        self.rounds = rounds
+        self.__rounds = rounds
+        self.__is_snake_dead = False
 
-    def is_cell_empty(self, x: int, y: int):
+    def _is_cell_empty(self, x: int, y: int):
         return (x, y) not in (
                 self.__snake.body_coordinates +
                 self.__apple_handler.get_apples_coordinates() +
                 self.__wall_handler.get_walls_coordinates())
 
-    def are_cells_empty(self, cells: List[Tuple[int, int]]):
-        return all(self.is_cell_empty(*cell) for cell in cells)
+    def _are_cells_empty(self, cells: List[Tuple[int, int]]):
+        return all(self._is_cell_empty(*cell) for cell in cells)
 
     def read_key(self, key_clicked: Optional[str]) -> None:
         self.__key_clicked = key_clicked
 
+    def _snake_collided_with_wall(self):
+        return not (0 <= self.__snake.snake_head[0] < self.__board_width and
+            0 <= self.__snake.snake_head[1] < self.__board_height)
+
+    def _check_snake_collision(self):
+        if self._snake_collided_with_wall():
+            self.__snake.remove_snake_head()
+            self.__is_snake_dead = True
+
     def update_objects(self) -> None:
         self.__snake.move(self.__key_clicked)
+        self._check_snake_collision()
 
     def draw_board(self, gd: GameDisplay) -> None:
         for cord in self.__snake.body_coordinates:
@@ -37,10 +50,10 @@ class SnakeGame:
         #gd.draw_cell(*self.__snake.get_snake_coordinates()[0], "black")
 
     def end_round(self) -> None:
-        self.rounds -= 1
+        self.__rounds -= 1
 
     def is_over(self) -> bool:
-        return self.rounds == 0
+        return self.__rounds == 0 or self.__is_snake_dead
 
     @property
     def score(self):
