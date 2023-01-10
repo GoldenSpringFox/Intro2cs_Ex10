@@ -8,7 +8,7 @@ from game_utils import size, get_random_apple_data
 
 class SnakeGame:
 
-    def __init__(self, rounds: int, max_apples: int) -> None:
+    def __init__(self, rounds: int, max_apples: int, *args) -> None:
         self.__board_width = size[0]
         self.__board_height = size[1]
         self.__snake = Snake((self.__board_width//2, self.__board_height//2))
@@ -37,13 +37,13 @@ class SnakeGame:
             0 <= self.__snake.snake_head[1] < self.__board_height)
 
     def _check_snake_collision(self):
-        if self._snake_collided_with_wall():
+        if self._snake_collided_with_wall() or self.__snake.is_head_on_body():
             self.__snake.remove_snake_head()
             self.__is_snake_dead = True
 
     def update_objects(self) -> None:
         new_apple = get_random_apple_data()
-        if self.is_cell_empty(new_apple[0], new_apple[1]) and len(self.__apple_handler.get_apples_coordinates()) < self.__max_apples:
+        if self._is_cell_empty(new_apple[0], new_apple[1]) and len(self.__apple_handler.get_apples_coordinates()) < self.__max_apples:
             self.__apple_handler.generate_new_apple(new_apple)
 
         self.__snake.move(self.__key_clicked)
@@ -52,7 +52,6 @@ class SnakeGame:
     def draw_board(self, gd: GameDisplay) -> None:
         for cord in self.__snake.body_coordinates:
             gd.draw_cell(*cord, 'black')
-        # gd.draw_cell(*self.__snake.get_snake_coordinates()[0], "black")
         for apple in self.__apple_handler.get_apples_coordinates():
             gd.draw_cell(*apple, 'green')
 

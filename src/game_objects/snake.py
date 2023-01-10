@@ -4,15 +4,18 @@ from functools import reduce
 class Snake:
     MOVEMENT_DICT = {'Up': (0, 1), 'Down': (0, -1), 'Left': (-1, 0), 'Right': (1,0)}
 
-    def __init__(self, position: Tuple[int, int]):
+    def __init__(self, position: Tuple[int, int], width=5):
         self.__direction = 'Up'
-        self.__body = []
-        self.__body.append(position)
-        self.__body.append(Snake._position_after_movement(position, 'Down'))
-        self.__body.append(Snake._position_after_movement(position, 'Down', 'Down'))
+        self._initialize_body(position, width)
 
     def _position_after_movement(start: Tuple[int, int], *directions: str):
         return reduce(lambda pos,move_key: tuple(map(lambda x,y: x+y, pos, Snake.MOVEMENT_DICT[move_key])),directions, start)
+
+    def _initialize_body(self, position, width):
+        self.__body = []
+        self.__body.append(position)
+        for _ in range(width-1):
+            self.__body.append(Snake._position_after_movement(self.__body[-1], 'Down'))
 
     @property
     def body_coordinates(self) -> List[Tuple[int, int]]:
@@ -45,3 +48,6 @@ class Snake:
         new_cord = Snake._position_after_movement(self.snake_head, self.__direction)
         self.__body.insert(0, new_cord)
         self.__body.pop()
+
+    def is_head_on_body(self):
+        return self.snake_head in self.__body[1:]
