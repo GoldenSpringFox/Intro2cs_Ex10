@@ -8,7 +8,7 @@ from game_utils import size, get_random_apple_data
 
 class SnakeGame:
 
-    def __init__(self, rounds: int) -> None:
+    def __init__(self, rounds: int, max_apples: int) -> None:
         self.__board_width = size[0]
         self.__board_height = size[1]
         self.__snake = Snake((self.__board_width//2, self.__board_height//2))
