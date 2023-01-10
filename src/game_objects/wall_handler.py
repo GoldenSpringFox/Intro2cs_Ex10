@@ -1,9 +1,9 @@
-from src import game_utils
 from typing import List, Tuple
 
 
 class WallHandler:
-    DIRECTION_DICT = {'Up': [(0, 1), (0, -1)], 'Down': [(0, 1), (0, -1)],'Right': [(1, 0), (-1, 0)], 'Left': [(1, 0), (-1, 0)]}
+    DIRECTION_DICT = {'Up': [(0, 1), (0, -1)], 'Down': [(0, 1), (0, -1)], 'Right': [(1, 0), (-1, 0)],
+                      'Left': [(1, 0), (-1, 0)]}
     MOVEMENT_DICT = {'Up': (0, 1), 'Down': (0, -1), "Left": (1, 0), 'Right': (1, 0)}
 
     def __init__(self) -> None:
@@ -13,11 +13,13 @@ class WallHandler:
         self.__walls.append(wall)
 
     def move_wall(self):
+        lst = []
         for wall in self.__walls:
             wall_cord = (wall[0], wall[1])
-            wall = self._adding_tuples(wall_cord, self.MOVEMENT_DICT[wall[2]])
-
-
+            _wall = self._adding_tuples(wall_cord, self.MOVEMENT_DICT[wall[2]])
+            moved_wall = (_wall[0], _wall[1], wall[2])
+            lst.append(moved_wall)
+        self.__walls = lst
     def _adding_tuples(self, wall_mid_cord: Tuple[int, int], cord: Tuple[int, int]):
         new_wall_cord = wall_mid_cord[0] + cord[0], wall_mid_cord[1] + cord[1]
         return new_wall_cord

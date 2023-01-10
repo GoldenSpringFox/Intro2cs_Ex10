@@ -3,7 +3,7 @@ from game_display import GameDisplay
 from game_objects.apple_handler import AppleHandler
 from game_objects.wall_handler import WallHandler
 from game_objects.snake import Snake
-from game_utils import size, get_random_apple_data
+from game_utils import size, get_random_apple_data, get_random_wall_data
 
 
 class SnakeGame:
@@ -11,6 +11,7 @@ class SnakeGame:
     def __init__(self, args) -> None:
         self.__rounds = args.rounds
         self.__max_apples = args.apples
+        self.__max_walls = args.walls
         self.__debug = args.debug
         self.__board_width = size[0]
         self.__board_height = size[1]
@@ -46,6 +47,11 @@ class SnakeGame:
             self.__snake.grow(3)
 
     def update_objects(self) -> None:
+        new_wall = get_random_wall_data()
+        if self._is_cell_empty(new_wall[0],new_wall[1]) and self.__wall_handler.num_of_walls < self.__max_walls:
+            self.__wall_handler.generate_new_wall(new_wall)
+        if self.__rounds%2 == 0:
+            self.__wall_handler.move_wall()
         new_apple = get_random_apple_data()
         if self._is_cell_empty(new_apple[0], new_apple[1]) and len(self.__apple_handler.get_apples_coordinates()) < self.__max_apples:
             self.__apple_handler.generate_new_apple(new_apple)
@@ -60,6 +66,8 @@ class SnakeGame:
                 gd.draw_cell(*cord, 'black')
         for apple in self.__apple_handler.get_apples_coordinates():
             gd.draw_cell(*apple, 'green')
+        for wall in self.__wall_handler.get_walls_coordinates():
+            gd.draw_cell(*wall, 'blue')
 
     def end_round(self) -> None:
         self.__rounds -= 1
