@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 class WallHandler:
     def __init__(self) -> None:
-        self.__walls: List[Tuple[int, int]]
+        self.__walls: List[Tuple[int, int]] = []
 
     def generate_new_wall(self):
         ...
