@@ -6,10 +6,10 @@ from game_display import GameDisplay
 def main_loop(gd: GameDisplay, args: argparse.Namespace) -> None:
 
     # INIT OBJECTS
-    game = SnakeGame(args.rounds, args.apples, args)
-    gd.show_score(game.score)
-
+    game = SnakeGame(args)
+    
     game.draw_board(gd)
+    gd.show_score(game.score)
     # END OF ROUND 0
 
     while not game.is_over():
@@ -22,6 +22,7 @@ def main_loop(gd: GameDisplay, args: argparse.Namespace) -> None:
         
         # DRAW BOARD
         game.draw_board(gd)
+        gd.show_score(game.score)
         
         # WAIT FOR NEXT ROUND:
         game.end_round()

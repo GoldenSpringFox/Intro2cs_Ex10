@@ -8,7 +8,10 @@ from game_utils import size, get_random_apple_data
 
 class SnakeGame:
 
-    def __init__(self, rounds: int, max_apples: int, *args) -> None:
+    def __init__(self, args) -> None:
+        self.__rounds = args.rounds
+        self.__max_apples = args.apples
+        self.__debug = args.debug
         self.__board_width = size[0]
         self.__board_height = size[1]
         self.__snake = Snake((self.__board_width//2, self.__board_height//2))
@@ -16,9 +19,7 @@ class SnakeGame:
         self.__wall_handler = WallHandler()
         self.__key_clicked = None
         self.__score = 0
-        self.__rounds = rounds
         self.__is_snake_dead = False
-        self.__max_apples = max_apples
 
     def _is_cell_empty(self, x: int, y: int):
         return (x, y) not in (
@@ -33,25 +34,30 @@ class SnakeGame:
         self.__key_clicked = key_clicked
 
     def _snake_collided_with_wall(self):
-        return not (0 <= self.__snake.snake_head[0] < self.__board_width and
-            0 <= self.__snake.snake_head[1] < self.__board_height)
+        return not (0 <= self.__snake.head_coordinate[0] < self.__board_width and
+            0 <= self.__snake.head_coordinate[1] < self.__board_height)
 
     def _check_snake_collision(self):
         if self._snake_collided_with_wall() or self.__snake.is_head_on_body():
             self.__snake.remove_snake_head()
             self.__is_snake_dead = True
+        elif self.__snake.head_coordinate in self.__apple_handler.get_apples_coordinates():
+            self.__score += int(self.__snake.body_length ** 0.5)
+            self.__snake.grow(3)
 
     def update_objects(self) -> None:
         new_apple = get_random_apple_data()
         if self._is_cell_empty(new_apple[0], new_apple[1]) and len(self.__apple_handler.get_apples_coordinates()) < self.__max_apples:
             self.__apple_handler.generate_new_apple(new_apple)
 
-        self.__snake.move(self.__key_clicked)
+        if not self.__debug:
+            self.__snake.move(self.__key_clicked)
         self._check_snake_collision()
 
     def draw_board(self, gd: GameDisplay) -> None:
-        for cord in self.__snake.body_coordinates:
-            gd.draw_cell(*cord, 'black')
+        if not self.__debug:
+            for cord in self.__snake.body_coordinates:
+                gd.draw_cell(*cord, 'black')
         for apple in self.__apple_handler.get_apples_coordinates():
             gd.draw_cell(*apple, 'green')
 
