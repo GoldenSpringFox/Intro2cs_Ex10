@@ -4,8 +4,9 @@ from functools import reduce
 class Snake:
     MOVEMENT_DICT = {'Up': (0, 1), 'Down': (0, -1), 'Left': (-1, 0), 'Right': (1,0)}
 
-    def __init__(self, position: Tuple[int, int], width=5):
+    def __init__(self, position: Tuple[int, int], width=3):
         self.__direction = 'Up'
+        self.__grow = 0
         self._initialize_body(position, width)
 
     def _position_after_movement(start: Tuple[int, int], *directions: str):
@@ -22,8 +23,12 @@ class Snake:
         return self.__body
 
     @property
-    def snake_head(self) -> Tuple[int, int]:
+    def head_coordinate(self) -> Tuple[int, int]:
         return self.__body[0]
+    
+    @property
+    def body_length(self) -> int:
+        return len(self.__body)
     
     def remove_snake_head(self):
         self.__body.pop(0)
@@ -45,9 +50,15 @@ class Snake:
         if move_key in self.MOVEMENT_DICT:
             self._turn(move_key)
         
-        new_cord = Snake._position_after_movement(self.snake_head, self.__direction)
+        new_cord = Snake._position_after_movement(self.head_coordinate, self.__direction)
         self.__body.insert(0, new_cord)
-        self.__body.pop()
+        if self.__grow > 0:
+            self.__grow -= 1
+        else:
+            self.__body.pop()
 
     def is_head_on_body(self):
-        return self.snake_head in self.__body[1:]
+        return self.head_coordinate in self.__body[1:]
+    
+    def grow(self, amount):
+        self.__grow += amount
