@@ -11,5 +11,5 @@ class AppleHandler:
     def get_apples_coordinates(self) -> List[Tuple[int, int]]:
         return self.__apples
 
-    def remove_apple(self, apple):
+    def remove_apple(self, apple: Tuple[int, int]):
         self.__apples.remove(apple)

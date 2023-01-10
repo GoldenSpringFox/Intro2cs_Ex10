@@ -1,4 +1,3 @@
-from src import game_utils
 from typing import List, Tuple
 
 
