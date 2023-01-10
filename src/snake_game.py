@@ -1,15 +1,15 @@
 from typing import Optional, List, Tuple
 from game_display import GameDisplay
-#from game_objects.snake import Snake
 from game_objects.apple_handler import AppleHandler
 from game_objects.wall_handler import WallHandler
-import Snake
+from game_objects.snake import Snake
+from game_utils import size
 
 
 class SnakeGame:
 
     def __init__(self, rounds: int) -> None:
-        self.__snake = Snake.Snake(20, 20)
+        self.__snake = Snake((size[0]//2, size[1]//2))
         self.__apple_handler = AppleHandler()
         self.__wall_handler = WallHandler()
         self.__key_clicked = None
@@ -18,7 +18,7 @@ class SnakeGame:
 
     def is_cell_empty(self, x: int, y: int):
         return (x, y) not in (
-                self.__snake.get_snake_coordinates() +
+                self.__snake.body_coordinates +
                 self.__apple_handler.get_apples_coordinates() +
                 self.__wall_handler.get_walls_coordinates())
 
@@ -32,7 +32,7 @@ class SnakeGame:
         self.__snake.move(self.__key_clicked)
 
     def draw_board(self, gd: GameDisplay) -> None:
-        for cord in self.__snake.get_snake_coordinates():
+        for cord in self.__snake.body_coordinates:
             gd.draw_cell(*cord, 'black')
         #gd.draw_cell(*self.__snake.get_snake_coordinates()[0], "black")
 
