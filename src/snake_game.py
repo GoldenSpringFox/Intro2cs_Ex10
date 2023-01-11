@@ -40,11 +40,10 @@ class SnakeGame:
                 gd.draw_cell(*cord, 'black')
         for apple in self.__apple_handler.apples_coordinates:
             gd.draw_cell(*apple, 'green')
-        for wall in self.__wall_handler.walls_coordinates.values():
-            for coordinate in wall:
-                if self._is_cell_out_of_bounds(*coordinate):
-                    continue
-                gd.draw_cell(*coordinate, 'blue')
+        for coordinate in self.__wall_handler.walls_coordinates:
+            if self._is_cell_out_of_bounds(*coordinate):
+                continue
+            gd.draw_cell(*coordinate, 'blue')
 
     def end_round(self) -> None:
         self.__rounds -= 1
@@ -65,7 +64,7 @@ class SnakeGame:
         return (x, y) not in (
                 self.__snake.body_coordinates +
                 self.__apple_handler.apples_coordinates +
-                [coordinate for coordinate in self.__wall_handler.walls_coordinates.values()])
+                self.__wall_handler.walls_coordinates)
 
     def _are_cells_empty(self, *cells: Tuple[int, int]):
         return all(self._is_cell_empty(*cell) for cell in cells)
@@ -100,7 +99,8 @@ class SnakeGame:
         self._handle_wall_collisions()
 
     def _handle_snake_collisions(self):
-        if self._is_snake_out_of_bounds() or self.__snake.is_head_on_body():
+        if self._is_snake_out_of_bounds() or self.__snake.is_head_on_body() or \
+            self.__snake.head_coordinate in self.__wall_handler.walls_coordinates:
             self.__snake.remove_snake_head()
             self.__is_snake_dead = True
         elif self.__snake.head_coordinate in self.__apple_handler.apples_coordinates:
@@ -112,7 +112,7 @@ class SnakeGame:
         return self._is_cell_out_of_bounds(*self.__snake.head_coordinate)
 
     def _handle_wall_collisions(self):
-        for wall, wall_coordinates in self.__wall_handler.walls_coordinates.items():
+        for wall, wall_coordinates in self.__wall_handler.walls_coordinates_dict.items():
             if self._is_wall_out_of_bounds(wall_coordinates):
                 self.__wall_handler.remove_wall(wall)
 

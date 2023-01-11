@@ -29,5 +29,9 @@ class WallHandler:
                 for i in range(-(self.__length//2), self.__length//2 + 1)]
 
     @property
-    def walls_coordinates(self) -> Dict[Tuple[int, int, str], List[Tuple[int, int]]]:
+    def walls_coordinates(self) -> List[Tuple[int, int]]:
+        return [coordinate for wall in self.__walls for coordinate in self.calculate_wall_coordinates(*wall)]
+
+    @property
+    def walls_coordinates_dict(self) -> Dict[Tuple[int, int, str], List[Tuple[int, int]]]:
         return {wall: self.calculate_wall_coordinates(*wall) for wall in self.__walls}
