@@ -89,7 +89,7 @@ class SnakeGame:
 
     def _move_objects(self):
         if self.__rounds%2 == 0:
-            self.__wall_handler.move_wall()
+            self.__wall_handler.move_walls()
 
         if not self.__debug:
             self.__snake.move(self.__key_clicked)
@@ -117,6 +117,6 @@ class SnakeGame:
                 self.__wall_handler.remove_wall(wall)
 
     def _is_wall_out_of_bounds(self, wall_coordinates: List[Tuple[int, int]]):
-        return not any(self._is_cell_out_of_bounds(*coordinate) for coordinate in wall_coordinates)
+        return all(self._is_cell_out_of_bounds(*coordinate) for coordinate in wall_coordinates)
 
 

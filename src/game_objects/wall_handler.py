@@ -11,7 +11,7 @@ class WallHandler:
     def add_wall(self, wall: Tuple[int, int, str]):
         self.__walls.append(wall)
 
-    def move_wall(self):
+    def move_walls(self):
         for _ in range(self.num_of_walls):
             x, y, direction = self.__walls.pop(0)
             x, y = (x + self.MOVEMENT_DICT[direction][0], y + self.MOVEMENT_DICT[direction][1])
