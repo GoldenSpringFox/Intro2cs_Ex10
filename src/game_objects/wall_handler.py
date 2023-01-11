@@ -11,7 +11,7 @@ class WallHandler:
     def add_wall(self, wall: Tuple[int, int, str]):
         self.__walls.append(wall)
 
-    def move_wall(self):
+    def move_walls(self):
         for _ in range(self.num_of_walls):
             x, y, direction = self.__walls.pop(0)
             x, y = (x + self.MOVEMENT_DICT[direction][0], y + self.MOVEMENT_DICT[direction][1])
@@ -31,6 +31,3 @@ class WallHandler:
     @property
     def walls_coordinates(self) -> Dict[Tuple[int, int, str], List[Tuple[int, int]]]:
         return {wall: self.calculate_wall_coordinates(*wall) for wall in self.__walls}
-
-    # def get_walls_centers(self) -> List[Tuple[int, int]]:
-    #     return [(wall[0], wall[1]) for wall in self.__walls]
