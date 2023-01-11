@@ -44,7 +44,7 @@ class SnakeGame:
             for coordinate in wall:
                 if self._is_cell_out_of_bounds(*coordinate):
                     continue
-                gd.draw_cell(*wall, 'blue')
+                gd.draw_cell(*coordinate, 'blue')
 
     def end_round(self) -> None:
         self.__rounds -= 1
@@ -65,9 +65,9 @@ class SnakeGame:
         return (x, y) not in (
                 self.__snake.body_coordinates +
                 self.__apple_handler.apples_coordinates +
-                self.__wall_handler.walls_coordinates.values())
+                [coordinate for coordinate in self.__wall_handler.walls_coordinates.values()])
 
-    def _are_cells_empty(self, cells: List[Tuple[int, int]]):
+    def _are_cells_empty(self, *cells: Tuple[int, int]):
         return all(self._is_cell_empty(*cell) for cell in cells)
     
     def _is_cell_out_of_bounds(self, x, y):
@@ -78,7 +78,7 @@ class SnakeGame:
         if self.__wall_handler.num_of_walls < self.__max_walls:
             new_wall = get_random_wall_data()
             new_wall_coordinates = self.__wall_handler.calculate_wall_coordinates(*new_wall)
-            if self._are_cells_empty(new_wall_coordinates):
+            if self._are_cells_empty(*new_wall_coordinates):
                 self.__wall_handler.add_wall(new_wall)
         
         if self.__apple_handler.apple_count < self.__max_apples:
