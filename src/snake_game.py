@@ -72,19 +72,23 @@ class SnakeGame:
     def _is_cell_out_of_bounds(self, x, y):
         return not (0 <= x < self.__board_width and 0 <= y < self.__board_height)
 
-
     def _create_objects(self):
         if self.__wall_handler.num_of_walls < self.__max_walls:
-            new_wall = get_random_wall_data()
-            new_wall_coordinates = self.__wall_handler.calculate_wall_coordinates(*new_wall)
-            if self._are_cells_empty(*new_wall_coordinates):
-                self.__wall_handler.add_wall(new_wall)
+            self._attempt_wall_creation()
 
         if self.__apple_handler.apple_count < self.__max_apples:
-            new_apple = get_random_apple_data()
-            if self._is_cell_empty(*new_apple):
-                self.__apple_handler.add_apple(new_apple)
+            self._attempt_apple_creation()
 
+    def _attempt_wall_creation(self):
+        new_wall = get_random_wall_data()
+        new_wall_coordinates = self.__wall_handler.calculate_wall_coordinates(*new_wall)
+        if self._are_cells_empty(*new_wall_coordinates):
+            self.__wall_handler.add_wall(new_wall)
+        
+    def _attempt_apple_creation(self):
+        new_apple = get_random_apple_data()
+        if self._is_cell_empty(*new_apple):
+            self.__apple_handler.add_apple(new_apple)
 
     def _move_objects(self):
         if self.__rounds%2 == 0:
@@ -115,19 +119,15 @@ class SnakeGame:
         for wall, wall_coordinates in self.__wall_handler.walls_coordinates_dict.items():
             if self._is_wall_out_of_bounds(wall_coordinates):
                 self.__wall_handler.remove_wall(wall)
-        for wall, wall_coordinates in self.__wall_handler.walls_coordinates.items():
-            for apple in self.__apple_handler.apples_coordinates:
-                if self._is_wall_going_over_apple(wall_coordinates, apple):
-                    self.__apple_handler.remove_apple(apple)
-                    new_apple = get_random_apple_data()
-                    if self._is_cell_empty(*new_apple):
-                        self.__apple_handler.add_apple(new_apple)
+            if self.__is_snake_dead:
+                continue
+            for wall_coordinate in wall_coordinates:
+                if wall_coordinate in self.__snake.body_coordinates:
+                    self.__snake.cut_snake(wall_coordinate)
+                if wall_coordinate in self.__apple_handler.apples_coordinates:
+                    self.__apple_handler.remove_apple(wall_coordinate)
+                    self._attempt_apple_creation()
 
-    def _is_wall_going_over_apple(self,wall_cords: List[Tuple[int, int]], apple: Tuple[int, int]):
-        if apple in wall_cords:
-            return True
-        else:
-            return False
     def _is_wall_out_of_bounds(self, wall_coordinates: List[Tuple[int, int]]):
         return all(self._is_cell_out_of_bounds(*coordinate) for coordinate in wall_coordinates)
 

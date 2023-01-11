@@ -9,14 +9,14 @@ class Snake:
         self.__grow = 0
         self._initialize_body(position, width)
 
-    def _position_after_movement(start: Tuple[int, int], *directions: str):
-        return reduce(lambda pos,move_key: tuple(map(lambda x,y: x+y, pos, Snake.MOVEMENT_DICT[move_key])),directions, start)
-
     def _initialize_body(self, position, width):
-        self.__body = []
+        self.__body: List[Tuple[int, int]] = []
         self.__body.append(position)
         for _ in range(width-1):
             self.__body.append(Snake._position_after_movement(self.__body[-1], 'Down'))
+
+    def _position_after_movement(start: Tuple[int, int], *directions: str) -> Tuple[int, int]:
+        return reduce(lambda pos,move_key: tuple(map(lambda x,y: x+y, pos, Snake.MOVEMENT_DICT[move_key])),directions, start)
 
     @property
     def body_coordinates(self) -> List[Tuple[int, int]]:
@@ -62,3 +62,6 @@ class Snake:
     
     def grow(self, amount):
         self.__grow += amount
+    
+    def cut_snake(self, coordinate: Tuple[int, int]):
+        self.__body = self.__body[:self.__body.index(coordinate)]
