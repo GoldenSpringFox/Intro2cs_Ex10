@@ -122,11 +122,19 @@ class SnakeGame:
             if self.__is_snake_dead:
                 continue
             for wall_coordinate in wall_coordinates:
-                if wall_coordinate in self.__snake.body_coordinates:
-                    self.__snake.cut_snake(wall_coordinate)
-                if wall_coordinate in self.__apple_handler.apples_coordinates:
-                    self.__apple_handler.remove_apple(wall_coordinate)
-                    self._attempt_apple_creation()
+                self._handle_wall_snake_collision(wall_coordinate)
+                self._handle_wall_apple_collision(wall_coordinate)
+
+    def _handle_wall_snake_collision(self, wall_coordinate: Tuple[int, int]):
+        if wall_coordinate in self.__snake.body_coordinates:
+            self.__snake.cut_snake(wall_coordinate)
+            if self.__snake.body_length == 1:
+                self.__is_snake_dead = True
+
+    def _handle_wall_apple_collision(self, wall_coordinate: Tuple[int, int]):
+        if wall_coordinate in self.__apple_handler.apples_coordinates:
+            self.__apple_handler.remove_apple(wall_coordinate)
+            self._attempt_apple_creation()
 
     def _is_wall_out_of_bounds(self, wall_coordinates: List[Tuple[int, int]]):
         return all(self._is_cell_out_of_bounds(*coordinate) for coordinate in wall_coordinates)
