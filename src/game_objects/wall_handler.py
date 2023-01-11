@@ -31,6 +31,3 @@ class WallHandler:
     @property
     def walls_coordinates(self) -> Dict[Tuple[int, int, str], List[Tuple[int, int]]]:
         return {wall: self.calculate_wall_coordinates(*wall) for wall in self.__walls}
-
-    # def get_walls_centers(self) -> List[Tuple[int, int]]:
-    #     return [(wall[0], wall[1]) for wall in self.__walls]
