@@ -1,5 +1,4 @@
 import argparse
-import game_utils
 from snake_game import SnakeGame
 from game_display import GameDisplay
 

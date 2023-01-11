@@ -47,18 +47,27 @@ class SnakeGame:
             self.__score += int(self.__snake.body_length ** 0.5)
             self.__snake.grow(3)
 
-    def update_objects(self) -> None:
-        new_wall = get_random_wall_data()
-        if self._is_cell_empty(new_wall[0],new_wall[1]) and self.__wall_handler.num_of_walls < self.__max_walls:
-            self.__wall_handler.generate_new_wall(new_wall)
+    def _create_objects(self):
+        if self.__wall_handler.num_of_walls < self.__max_walls:
+            new_wall = get_random_wall_data()
+            if self._is_cell_empty(new_wall[0], new_wall[1]):
+                self.__wall_handler.add_wall(new_wall)
+        
+        if self.__apple_handler.apple_count < self.__max_apples:
+            new_apple = get_random_apple_data()
+            if self._is_cell_empty(*new_apple):
+                self.__apple_handler.add_apple(new_apple)
+
+    def _move_objects(self):
         if self.__rounds%2 == 0:
             self.__wall_handler.move_wall()
-        new_apple = get_random_apple_data()
-        if self._is_cell_empty(new_apple[0], new_apple[1]) and len(self.__apple_handler.get_apples_coordinates()) < self.__max_apples:
-            self.__apple_handler.generate_new_apple(new_apple)
 
         if not self.__debug:
             self.__snake.move(self.__key_clicked)
+
+    def update_objects(self) -> None:
+        self._create_objects()
+        self._move_objects()
         self._check_snake_collision()
 
     def draw_board(self, gd: GameDisplay) -> None:
@@ -74,7 +83,7 @@ class SnakeGame:
         self.__rounds -= 1
 
     def is_over(self) -> bool:
-        return self.__rounds <= 0 or self.__is_snake_dead
+        return self.__rounds == 0 or self.__is_snake_dead
 
     @property
     def score(self):
