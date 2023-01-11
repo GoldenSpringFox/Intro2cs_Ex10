@@ -119,6 +119,9 @@ class SnakeGame:
             for apple in self.__apple_handler.apples_coordinates:
                 if self._is_wall_going_over_apple(wall_coordinates, apple):
                     self.__apple_handler.remove_apple(apple)
+                    new_apple = get_random_apple_data()
+                    if self._is_cell_empty(*new_apple):
+                        self.__apple_handler.add_apple(new_apple)
 
     def _is_wall_going_over_apple(self,wall_cords: List[Tuple[int, int]], apple: Tuple[int, int]):
         if apple in wall_cords:
