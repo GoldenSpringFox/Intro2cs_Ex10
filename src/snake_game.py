@@ -52,7 +52,7 @@ class SnakeGame:
         self.__rounds += 1
 
     def is_over(self) -> bool:
-        return self.__rounds > self.__max_rounds or self.__is_snake_dead
+        return 0 <= self.__max_rounds < self.__rounds or self.__is_snake_dead
 
     @property
     def score(self):
