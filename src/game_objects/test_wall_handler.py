@@ -21,3 +21,16 @@ def test_get_walls_coordinates():
     wall_handler.add_wall((3, 3, 'Up'))
     wall_handler.add_wall((3, 2, 'Right'))
     assert set(wall_handler.get_walls_coordinates()) == {(2, 3), (3, 3), (4, 3), (3, 1), (3, 2)}
+
+
+def test_move_wall():
+    wall_handler = WallHandler()
+    wall_handler.add_wall((3, 3, 'Up'))
+    wall_handler.move_wall()
+    assert set(wall_handler.get_walls_coordinates()) == {(3, 3), (4, 3), (5, 3)}
+
+    wall_handler = WallHandler()
+    wall_handler.add_wall((3, 3, 'Up'))
+    wall_handler.add_wall((3, 2, 'Right'))
+    wall_handler.move_wall()
+    assert set(wall_handler.get_walls_coordinates()) == {(3, 3), (4, 3), (5, 3), (3, 2), (3, 4)}
