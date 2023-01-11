@@ -7,8 +7,10 @@ def main_loop(gd: GameDisplay, args: argparse.Namespace) -> None:
     # INIT OBJECTS
     game = SnakeGame(args)
     
-    game.draw_board(gd)
     gd.show_score(game.score)
+    game.draw_board(gd)
+    game.end_round()
+    gd.end_round()
     # END OF ROUND 0
 
     while not game.is_over():

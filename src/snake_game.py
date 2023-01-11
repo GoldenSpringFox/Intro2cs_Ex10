@@ -8,7 +8,8 @@ from game_utils import size, get_random_apple_data, get_random_wall_data
 
 class SnakeGame:
     def __init__(self, args) -> None:
-        self.__rounds = args.rounds
+        self.__rounds = 0
+        self.__max_rounds = args.rounds
         self.__max_apples = args.apples
         self.__max_walls = args.walls
         self.__debug = args.debug
@@ -20,6 +21,8 @@ class SnakeGame:
         self.__key_clicked = None
         self.__score = 0
         self.__is_snake_dead = False
+
+        self._create_objects()
 
 
     ######################
@@ -46,10 +49,10 @@ class SnakeGame:
             gd.draw_cell(*coordinate, 'blue')
 
     def end_round(self) -> None:
-        self.__rounds -= 1
+        self.__rounds += 1
 
     def is_over(self) -> bool:
-        return self.__rounds == 0 or self.__is_snake_dead
+        return self.__rounds > self.__max_rounds or self.__is_snake_dead
 
     @property
     def score(self):
@@ -138,5 +141,3 @@ class SnakeGame:
 
     def _is_wall_out_of_bounds(self, wall_coordinates: List[Tuple[int, int]]):
         return all(self._is_cell_out_of_bounds(*coordinate) for coordinate in wall_coordinates)
-
-
