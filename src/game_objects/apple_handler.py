@@ -8,6 +8,9 @@ class AppleHandler:
     def add_apple(self, location: Tuple[int, int]):
         self.__apples.append(location)
 
+    def remove_apple(self, apple: Tuple[int, int]):
+        self.__apples.remove(apple)
+
     @property
     def apples_coordinates(self) -> List[Tuple[int, int]]:
         return self.__apples
@@ -15,6 +18,3 @@ class AppleHandler:
     @property
     def apple_count(self):
         return len(self.__apples)
-
-    def remove_apple(self, apple: Tuple[int, int]):
-        self.__apples.remove(apple)
