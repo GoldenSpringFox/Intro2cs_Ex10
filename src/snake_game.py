@@ -20,8 +20,8 @@ class SnakeGame:
         self.__key_clicked = None
         self.__score = 0
         self.__is_snake_dead = False
-    
-    
+
+
     ######################
     #   Public Methods   #
     ######################
@@ -55,7 +55,7 @@ class SnakeGame:
     @property
     def score(self):
         return self.__score
-    
+
 
     #######################
     #   Private Methods   #
@@ -69,10 +69,10 @@ class SnakeGame:
 
     def _are_cells_empty(self, *cells: Tuple[int, int]):
         return all(self._is_cell_empty(*cell) for cell in cells)
-    
+
     def _is_cell_out_of_bounds(self, x, y):
         return not (0 <= x < self.__board_width and 0 <= y < self.__board_height)
-    
+
 
     def _create_objects(self):
         if self.__wall_handler.num_of_walls < self.__max_walls:
@@ -80,7 +80,7 @@ class SnakeGame:
             new_wall_coordinates = self.__wall_handler.calculate_wall_coordinates(*new_wall)
             if self._are_cells_empty(*new_wall_coordinates):
                 self.__wall_handler.add_wall(new_wall)
-        
+
         if self.__apple_handler.apple_count < self.__max_apples:
             new_apple = get_random_apple_data()
             if self._is_cell_empty(*new_apple):
@@ -115,7 +115,16 @@ class SnakeGame:
         for wall, wall_coordinates in self.__wall_handler.walls_coordinates.items():
             if self._is_wall_out_of_bounds(wall_coordinates):
                 self.__wall_handler.remove_wall(wall)
+        for wall, wall_coordinates in self.__wall_handler.walls_coordinates.items():
+            for apple in self.__apple_handler.apples_coordinates:
+                if self._is_wall_going_over_apple(wall_coordinates, apple):
+                    self.__apple_handler.remove_apple(apple)
 
+    def _is_wall_going_over_apple(self,wall_cords: List[Tuple[int, int]], apple: Tuple[int, int]):
+        if apple in wall_cords:
+            return True
+        else:
+            return False
     def _is_wall_out_of_bounds(self, wall_coordinates: List[Tuple[int, int]]):
         return all(self._is_cell_out_of_bounds(*coordinate) for coordinate in wall_coordinates)
 
