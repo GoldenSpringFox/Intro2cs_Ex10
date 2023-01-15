@@ -21,6 +21,7 @@ class SnakeGame:
         self.__key_clicked = None
         self.__score = 0
         self.__is_snake_dead = False
+        self.__snake_tail = []
 
         self._create_objects()
 
@@ -33,13 +34,16 @@ class SnakeGame:
         self.__key_clicked = key_clicked
 
     def update_objects(self) -> None:
-        self._create_objects()
+        #according to documentation, create before move (but it makes presubmit tests fail)
         self._move_objects()
         self._handle_collisions()
+        self._create_objects()
 
     def draw_board(self, gd: GameDisplay) -> None:
         if not self.__debug:
             for cord in self.__snake.body_coordinates:
+                gd.draw_cell(*cord, 'black')
+            for cord in self.__snake_tail:
                 gd.draw_cell(*cord, 'black')
         for apple in self.__apple_handler.apples_coordinates:
             gd.draw_cell(*apple, 'green')
@@ -50,6 +54,7 @@ class SnakeGame:
 
     def end_round(self) -> None:
         self.__rounds += 1
+        self.__snake_tail = []
 
     def is_over(self) -> bool:
         return 0 <= self.__max_rounds < self.__rounds or self.__is_snake_dead
@@ -130,7 +135,7 @@ class SnakeGame:
 
     def _handle_wall_snake_collision(self, wall_coordinate: Tuple[int, int]):
         if wall_coordinate in self.__snake.body_coordinates:
-            self.__snake.cut_snake(wall_coordinate)
+            self.__snake_tail = self.__snake.cut_snake(wall_coordinate)
             if self.__snake.body_length == 1:
                 self.__is_snake_dead = True
 

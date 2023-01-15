@@ -64,4 +64,6 @@ class Snake:
         self.__grow += amount
     
     def cut_snake(self, coordinate: Tuple[int, int]):
+        tail = self.__body[self.__body.index(coordinate) + 1:]
         self.__body = self.__body[:self.__body.index(coordinate)]
+        return tail
