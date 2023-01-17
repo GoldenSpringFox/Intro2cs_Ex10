@@ -169,13 +169,13 @@ class GameDisplay:
         """
         self._update_drawing()
 
-        # self._round_start_time += self.delay
-        # now = time.time()
-        # while now < self._round_start_time:
-        #     time.sleep(self._round_start_time - now)
-        #     now = time.time()
-        while not self.key_click:
-            pass
+        self._round_start_time += self.delay
+        now = time.time()
+        while now < self._round_start_time:
+            time.sleep(self._round_start_time - now)
+            now = time.time()
+        # while not self.key_click:
+        #     pass
         self._round_num += 1
 
     def show_score(self, val: Any) -> None:
